@@ -60,20 +60,17 @@
             ctx = $('#canvas')[0].getContext("2d");
             setInterval(draw,10);
         });
-
+      
         function draw() {
-			ctx.save
             ctx.clearRect(0,0,500,500);
             star(ctx, 100, 100, 90, 16, 60, deg);
-			ctx.fillStyle="#FsF00FF";
+			ctx.fillStyle="#FF00FF";
             circle(ctx,100,100,25);
-            deg+=0.5;
-            if(deg>=360) deg=0;
-			star(ctx,250,250,30,8,4,-deg);
+			star(ctx,250,250,40,12,20,-deg);
 			ctx.fillStyle="#00FFFF";
 			circle(ctx,250,250,10);
-			deg+=0.5;
-			if(deg>=360) deg=0;
+            deg+=0.5;
+            if(deg>=360) deg=0;
         }
     </script>
 </head>
