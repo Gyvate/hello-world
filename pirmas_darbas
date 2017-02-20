@@ -1,85 +1,136 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Nd 1</title>
-    <style type="text/css">
-        #canvas{
-            border: 1px solid black;
-        }
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <canvas id="FirstTask" width="578" height="250"></canvas>
     <script>
-        var ctx;
-        var deg=0;
-
-        function deg2rad(deg)
-        {
-            return deg*Math.PI/180;
-        }
-
-        /**
-         *
-         * @param ctx context
-         * @param sx  pradinis x  = centras x
-         * @param sy  pradinis y  centras y
-         * @param r   spindulys
-         * @param virsuniu kiek virsuniu
-         * @param vr  vidinis spindulys
-         * @param rot_deg kiek pasukti
-         */
-        function star(ctx, sx, sy, r, virsuniu, vr, rot_deg) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.translate(sx, sy);
-            ctx.rotate(deg2rad(rot_deg));
-            ctx.moveTo(0, -r); // pereiti prie pirmos virsunes
-
-            for (var i = 0; i < virsuniu; i++)
-            {
-                ctx.rotate(Math.PI/virsuniu);
-                ctx.lineTo(0, -vr);
-                ctx.rotate(Math.PI/virsuniu);
-                ctx.lineTo(0, -r);
-            }
-
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
-        }
-
-        function circle(ctx, sx, sy, radius) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.fillStyle="#FFFFFF";
-            ctx.arc(sx,sy,radius,0,2*Math.PI,false);
-            ctx.fill();
-            ctx.closePath();
-            ctx.restore();
-        }
-
-        $( document ).ready( function() {
-            ctx = $('#canvas')[0].getContext("2d");
-            setInterval(draw,10);
-        });
+        window.requestAnimFrame = (function(callback) {
+          return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+          function(callback) {
+            window.setTimeout(callback, 1000 / 60);
+          };
+        })();
       
-        function draw() {
-            ctx.clearRect(0,0,500,500);
-            star(ctx, 100, 100, 90, 16, 60, deg);
-			ctx.fillStyle="#FF00FF";
-            circle(ctx,100,100,25);
-			star(ctx,250,250,40,12,20,-deg);
-			ctx.fillStyle="#00FFFF";
-			circle(ctx,250,250,10);
-            deg+=0.5;
-            if(deg>=360) deg=0;
+        function gear(config){
+          this.x = config.x;                          // X position
+          this.y = config.y;                          // Y position
+          this.radiusO = config.radiusO;              // Outter radius
+          this.radiusI = config.radiusI;              // Inner radius
+          this.radiusM = config.radiusM;              // Middle radius
+          this.radiusH = config.radiusH;              // Hole radius
+          this.teethNUM = config.teethNUM;            // number of teeths
+          this.theta = config.theta;                  // theta
+          this.thetaSpeed = config.thetaSpeed / 1000; // theta Speed
+          this.color = config.color;                  // color
+          this.spinning = config.spinning;             // boolean to spin or not
+          this.clockwise = config.clockwise;          // boolean clockwise spin or not
         }
-    </script>
+        
+        gear.prototype.draw = function(){
+          var canvas = document.getElementById('FirstTask');
+          var context = canvas.getContext('2d');		  
+		      context.save();
+          var numPoints = this.teethNUM * 2;         
+          context.beginPath();
+          context.LineJoin = 'bevel';         
+          for(var n = 0; n < numPoints; n++){            
+            var radius = null;
+            if(n % 2 == 0){
+              radius = this.radiusO;
+            }
+            else{
+              radius = this.radiusI;
+            }
+            var theta = this.theta;
+            theta += ((Math.PI*2) / numPoints) * (n + 1);
+            var x = (radius * Math.sin(theta)) + this.x; 
+            var y = (radius * Math.cos(theta)) + this.y;
+            if(n == 0){
+              context.moveTo(x, y);
+            }
+            else{
+              context.lineTo(x, y);
+            }
+          }
+          context.closePath();
+          context.fillStyle = this.color;
+          context.fill();
+          
+          context.beginPath();
+          context.arc(this.x, this.y, this.radiusM, 0, Math.PI * 2, false);
+          context.fillstyle = this.color;
+          context.fill();
+          context.beginPath();
+          context.arc(this.x, this.y, this.radiusH, 0, Math.PI * 2, false);
+          context.fillstyle = "white";
+          context.fill();
+          context.restore;
+        } ;
+        
+        function rotating(gears, lastTime){
+          var canvas = document.getElementById('FirstTask');
+          var context = canvas.getContext('2d');
+          var time = (new Date()).getTime();
+          var timeDiff = time - lastTime;
+          for(var i = 0; i < gears.length; i++){
+            var gear = gears[i];
+            if(gears[i].spinning){
+              if(gears[i].clockwise){
+                gears[i].theta -= (gear.thetaSpeed * timeDiff);
+              }
+              else{
+                gears[i].theta += (gear.thetaSpeed * timeDiff);
+              }
+            }
+          }
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          for(var i = 0; i < gears.length; i++){
+            gears[i].draw();
+          }
+          requestAnimFrame(function(){
+            rotating(gears,time);
+          });
+        }
+        var gears = [];
+        gears.push(new gear({
+          x: 120,
+          y: 105,
+          radiusO: 90,
+          radiusI: 50,
+          radiusM: 80,
+          radiusH: 10,
+          teethNUM: 24,
+          theta: 0,
+          thetaSpeed: 1,
+          color: '#FF0000',
+          spinning: true,
+          clockwise: false
+        }));
+      // red gear
+        gears.push(new gear({
+          x: 222,
+          y: 190,
+          radiusO: 90,
+          radiusI: 50,
+          radiusM: 80,
+          radiusH: 10,
+          teethNUM: 24,
+          theta: 0,
+          thetaSpeed: 1,
+          color: '#00FF00',
+          spinning: false,
+          clockwise: false
+        }));
+      var time = (new Date()).getTime();
+      rotating(gears, time);
+	</script>
+    <style>
+      body,html{
+        margin:0px;
+        padding:0px;
+      }
+    </style>
 </head>
 <body>
-
-    <canvas width="500" height="500" id="canvas">
-
-
-    </canvas>
 
 </body>
 </html>
