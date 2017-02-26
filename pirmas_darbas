@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <canvas id="FirstTask" width="578" height="250"></canvas>
+    <canvas id="FirstTask" width="700" height="450"></canvas>
     <script>
         window.requestAnimFrame = (function(callback) {
           return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -9,22 +9,20 @@
             window.setTimeout(callback, 1000 / 60);
           };
         })();
-      
+		//constructor for gear 
         function gear(config){
           this.x = config.x;                          // X position
           this.y = config.y;                          // Y position
           this.radiusO = config.radiusO;              // Outter radius
           this.radiusI = config.radiusI;              // Inner radius
-          this.radiusM = config.radiusM;              // Middle radius
-          this.radiusH = config.radiusH;              // Hole radius
           this.teethNUM = config.teethNUM;            // number of teeths
           this.theta = config.theta;                  // theta
           this.thetaSpeed = config.thetaSpeed / 1000; // theta Speed
           this.color = config.color;                  // color
-          this.spinning = config.spinning;             // boolean to spin or not
+          this.spinning = config.spinning;            // boolean to spin or not
           this.clockwise = config.clockwise;          // boolean clockwise spin or not
         }
-        
+        //gear drawing
         gear.prototype.draw = function(){
           var canvas = document.getElementById('FirstTask');
           var context = canvas.getContext('2d');		  
@@ -54,16 +52,6 @@
           context.closePath();
           context.fillStyle = this.color;
           context.fill();
-          
-          context.beginPath();
-          context.arc(this.x, this.y, this.radiusM, 0, Math.PI * 2, false);
-          context.fillstyle = this.color;
-          context.fill();
-          context.beginPath();
-          context.arc(this.x, this.y, this.radiusH, 0, Math.PI * 2, false);
-          context.fillstyle = "white";
-          context.fill();
-          context.restore;
         } ;
         
         function rotating(gears, lastTime){
@@ -91,37 +79,114 @@
           });
         }
         var gears = [];
+        //red 20 teeth
         gears.push(new gear({
-          x: 120,
+          x: 450,
           y: 105,
-          radiusO: 90,
-          radiusI: 50,
-          radiusM: 80,
-          radiusH: 10,
-          teethNUM: 24,
+          radiusO: 70,
+          radiusI: 60,
+          teethNUM: 20,
           theta: 0,
-          thetaSpeed: 1,
+          thetaSpeed: 1.6,
           color: '#FF0000',
-          spinning: true,
+          spinning: false,
           clockwise: false
         }));
-      // red gear
+      // green 32 teeth
         gears.push(new gear({
-          x: 222,
-          y: 190,
+          x: 331,
+          y: 200,
           radiusO: 90,
-          radiusI: 50,
-          radiusM: 80,
-          radiusH: 10,
-          teethNUM: 24,
+          radiusI: 80,
+          teethNUM: 32,
           theta: 0,
           thetaSpeed: 1,
           color: '#00FF00',
           spinning: false,
+          clockwise: true
+        }));
+		//blue 5 teeth
+		gears.push(new gear({
+          x: 231,
+          y: 205,
+          radiusO: 18,
+          radiusI: 9,
+          teethNUM: 5,
+          theta: 0,
+          thetaSpeed: 6.4,
+          color: '#0000FF',
+          spinning: true,
           clockwise: false
         }));
       var time = (new Date()).getTime();
       rotating(gears, time);
+	  
+	  window.addEventListener('keydown',this.check,false);
+	  function check(evt) {
+		var code = evt.keyCode;
+		if(code == 37){
+			gears[2].x += -5;
+		}
+		else if(code == 38){
+			gears[2].y += -5;
+		}
+		else if(code == 39){
+			gears[2].x += 5;
+		}
+		else if(code == 40){
+			gears[2].y += 5;
+		}
+		for(i=0;i < 2; i++){
+			var dx = (gears[i].x - gears[2].x);
+			var dy = (gears[i].y - gears[2].y);
+			var distance = Math.sqrt(dx * dx + dy * dy);
+			if(distance < gears[0].radiusO + gears[2].radiusO){
+				gears[0].spinning = true;
+				gears[1].spinning = true;
+				gears[0].clockwise = true;
+				gears[1].clockwise = false;
+			}
+			else{
+				gears[0].spinning = false;
+				gears[1].spinning = false;
+			}
+			if(distance <gears[1].radiusO + gears[2].radiusO){
+				gears[0].spinning = true;
+				gears[1].spinning = true;
+				gears[0].clockwise = false;
+				gears[1].clockwise = true;
+			}
+			else{
+				gears[0].spinning = false;
+				gears[1].spinning = false;
+			}
+		}
+	}
+	/*function collision(gears){
+		var distance = Math.sqrt((gears[0].x - gears[2].x)^2 + (gears[0].y - gears[2].y)^2) - (gears[0].radiusO + gears[2].radiusO)	
+		if(distance <= 0){
+			gears[1].spinning = true;
+			gears[1].clockwise = true;
+			gears[2].spinning = true;
+			gears[2].clockwise = false;
+		}
+	}*/
+	/*gears[2].bind("EnterFrame", function(){
+		for(i=0;i < 2; i++){
+			var dx = (gears[i].x + gears[i].radiusO) - (gears[2].x + gears[2].radiusO);
+			var dy = (gears[i].y + gears[i].radiusO) - (gears[2].y + gears[2].radiusO);
+			var distance = Math.sqrt(dx * dx + dy * dy);
+			if(distance < gears[i].radiusO + gears[2].radiusO){
+				gears[0].spinning = true;
+				gears[1].spinning = true;
+			}
+			else{
+				gears[0].spinning = false;
+				gears[1].spinning = false;
+			}
+		}
+	});*/
+
 	</script>
     <style>
       body,html{
