@@ -1,8 +1,15 @@
 <html>
  <head>
+ <input type="range" min="0" max="5" value="0" step="1" onchange="showValue(this.value)" />
+ <span id="range">0</span>
   <script type="application/javascript">
-
-    function draw() {
+  
+    function showValue(newValue)
+    {
+      document.getElementById("range").innerHTML=newValue;
+	  draw(newValue);
+    }
+    function draw(newValue) {
       var canvas = document.getElementById('canvas');
       if (canvas.getContext) {
         var ctx = canvas.getContext("2d");
@@ -15,8 +22,7 @@
       ctx.lineTo(0,500);
       ctx.closePath();
       ctx.stroke(); 
-// step = 5
-      drawF(5);
+      drawF(newValue);
       }
         // Recursive draw 
         function drawF(step) {
@@ -25,42 +31,42 @@
           ctx.save();
           ctx.save();
           ctx.save();
-          ctx.save();
-          ctx.transform(0.25, 0, 0, 0.25, 250, 125); //1
+            
+          ctx.transform(0.25, 0, 0, 0.25, 311, 126); //red
           ctx.rotate(Math.PI);
+          ctx.fillStyle="rgb(255,0,0)";
           drawF(step);
           ctx.restore();
-          ctx.transform(0.25, 0, 0, 0.25, 200, 125); //2
+            
+          ctx.transform(0.5, 0, 0, 0.58, 250, 290); //green
           ctx.scale(1, -1);
-          drawF(step);
-          ctx.restore();
-          ctx.transform(0.35, 0, 0, 0.65, 325, -40); //2.5
-          ctx.rotate(Math.PI/2);
-          ctx.scale(1, -1);
+          ctx.fillStyle="rgb(0,255,0)";
           drawF(step); 
           ctx.restore();
-          ctx.transform(0.5, 0, 0, 0.5, 0, 250); //3  
+            
+          ctx.transform(0.5, 0, 0, 0.5, 0, 250); //blue
+          ctx.fillStyle="rgb(0,0,255)";
           drawF(step); 
           ctx.restore();
-          ctx.transform(0.5, 0, 0, 0.5, 250, 250); //4
+            
+          ctx.transform(0.5, 0, 0, 0.5, 250, 250); //black
           ctx.rotate(Math.PI/2);
           ctx.scale(1, -1);
+          ctx.fillStyle="rgb(0,0,0)";
           drawF(step); 
           }
           else drawT();    
         }   
 
         function drawT() {
-        // Filled red triangle
-        //ctx.fillStyle = "rgb(0,0,0)";
         ctx.beginPath();
         ctx.moveTo(150,0);
         ctx.lineTo(150,100);
         ctx.lineTo(300,100);
         ctx.lineTo(300,70);
-        ctx.lineTo(330,70); //4
+        ctx.lineTo(330,70);
         ctx.lineTo(330,100);
-        ctx.lineTo(400,100); //6
+        ctx.lineTo(400,100);
         ctx.lineTo(400,130);
         ctx.lineTo(380,130);
         ctx.lineTo(380,190);
@@ -81,7 +87,7 @@
   </script>
  </head>
  <body onload="draw();">
-   <h1>Sierpinski triangle</h1>
+   <h1>Antras_Darbas_98</h1>
    <canvas id="canvas" width="500" height="500"></canvas>
  </body>
 </html>
