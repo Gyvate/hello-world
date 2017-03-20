@@ -22,7 +22,7 @@
       ctx.lineTo(0,500);
       ctx.closePath();
       ctx.stroke(); 
-      drawF(newValue);
+      drawF(5);
       }
         // Recursive draw 
         function drawF(step) {
@@ -32,13 +32,13 @@
           ctx.save();
           ctx.save();
             
-          ctx.transform(0.25, 0, 0, 0.25, 311, 126); //red
+          ctx.transform(0.25, 0, 0, 0.25, 250, 126); //red
           ctx.rotate(Math.PI);
           ctx.fillStyle="rgb(255,0,0)";
           drawF(step);
           ctx.restore();
             
-          ctx.transform(0.5, 0, 0, 0.58, 250, 290); //green
+          ctx.transform(0.5, 0, 0, 0.50, 250, 250); //green
           ctx.scale(1, -1);
           ctx.fillStyle="rgb(0,255,0)";
           drawF(step); 
@@ -61,7 +61,7 @@
         function drawT() {
         ctx.beginPath();
         ctx.moveTo(150,0);
-        ctx.lineTo(150,100);
+        /*ctx.lineTo(150,100);
         ctx.lineTo(300,100);
         ctx.lineTo(300,70);
         ctx.lineTo(330,70);
@@ -80,7 +80,30 @@
         ctx.lineTo(200,350);
         ctx.lineTo(80,500);
         ctx.lineTo(500,500);
-        ctx.lineTo(500,0);
+        ctx.lineTo(500,0);*/
+		ctx.lineTo(150,100);
+		ctx.lineTo(220,100);
+		ctx.lineTo(220,40);
+		ctx.lineTo(250,40);
+		ctx.lineTo(250,100);
+		ctx.lineTo(400,100);
+		ctx.lineTo(400,160);
+		ctx.lineTo(320,160);
+		ctx.lineTo(320,200);
+		ctx.lineTo(360,200);
+		ctx.lineTo(360,400);
+		ctx.lineTo(260,400);
+		ctx.lineTo(260,250);
+		ctx.lineTo(210,250);
+		ctx.lineTo(210,210);
+		ctx.lineTo(100,210);
+		ctx.lineTo(100,260);
+		ctx.lineTo(200,260);
+		ctx.lineTo(200,300);
+		ctx.lineTo(70,300);
+		ctx.lineTo(0,500);
+		ctx.lineTo(500,500);
+		ctx.lineTo(500,0);
         ctx.fill();
         }       
     }
